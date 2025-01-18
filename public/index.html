@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D&D Game</title>
+    <style>
+        /* Add your CSS here */
+    </style>
+</head>
+<body>
+<h1>D&D Game</h1>
+<button id="commandButton">Send Command</button>
+<div id="output"></div>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const socket = io();
+
+    document.getElementById('commandButton').addEventListener('click', () => {
+        socket.emit('command', { action: 'exampleCommand' });
+    });
+
+    socket.on('update', (data) => {
+        document.getElementById('output').innerText = JSON.stringify(data);
+    });
+</script>
+</body>
+</html>
