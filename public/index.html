@@ -10,18 +10,30 @@
 </head>
 <body>
 <h1>D&D Game</h1>
-<button id="commandButton">Send Command</button>
+<label for="commandInput"></label><input type="text" id="commandInput" placeholder="Enter command">
+<button id="sendCommandButton">Send Command</button>
 <div id="output"></div>
-<script src="/socket.io/socket.io.js"></script>
+<script src="http://localhost:3000/socket.io/socket.io.js"></script> <!-- Ensure correct path -->
 <script>
-    const socket = io();
+    const socket = io('http://localhost:3000');
 
-    document.getElementById('commandButton').addEventListener('click', () => {
-        socket.emit('command', { action: 'exampleCommand' });
+    document.getElementById('sendCommandButton').addEventListener('click', () => {
+        const command = document.getElementById('commandInput').value;
+        socket.emit('command', { message: command });
+        console.log('Command sent:', command); // Debugging log
+    });
+
+    socket.on('connect', () => {
+        console.log('Connected to server');
+    });
+
+    socket.on('disconnect', () => {
+        console.log('Disconnected from server');
     });
 
     socket.on('update', (data) => {
-        document.getElementById('output').innerText = JSON.stringify(data);
+        const output = document.getElementById('output');
+        output.innerText += `Command received: ${data.message}\n`;
     });
 </script>
 </body>
